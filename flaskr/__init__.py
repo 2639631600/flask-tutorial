@@ -19,12 +19,16 @@ def create_app(test_config=None):
     # 确保实例文件夹存在
     try:
         os.makedirs(app.instance_path)
-    except OSError
+    except OSError:
         pass
 
     # 一个简单的页面
     @app.route('/hello')
     def hello():
         return 'Hello,World!'
+
+
+    from . import db
+    db.init_app(app)
 
     return app
