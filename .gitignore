@@ -1,6 +1,0 @@
-__pycache__/
-*.pyc
-/.vscode/
-
-flaskr/__pycache__/*.pyc
-flaskr/__pycache__/
