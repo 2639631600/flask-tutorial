@@ -12,6 +12,7 @@ with open(os.path.join(os.path.dirname(__file__), 'data.sql'), 'rb') as f:
     _data_sql = f.read().decode('utf8')
 # pdb.set_trace()
 
+
 @pytest.fixture
 def app():
     db_fd, db_path = tempfile.mkstemp()
@@ -43,13 +44,13 @@ def runner(app):
 
 # 验证（用户登录处理，此类用来设置test账号登录,test账号在data.sql中，用app固件写入了测试数据库）
 class AuthActions(object):
-    def __init__(self,client):
+    def __init__(self, client):
         self._client = client
 
-    def login(self,username='test',password='test'):
+    def login(self, username='test', password='test'):
         return self._client.post(
             '/auth/login',
-            data={'username':username,'password':password}
+            data={'username': username, 'password': password}
         )
 
     def logout(self):
