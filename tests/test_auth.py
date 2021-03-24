@@ -33,8 +33,8 @@ def test_register(client, app):
 # 测试登录视图
 def test_login(client, auth):
     assert client.get('/auth/login').status_code == 200
-    response = auth.login
-    assert 'http://localhost' == response.headers['Location']
+    response = auth.login()
+    assert response.headers['Location'] == 'http://localhost/'
 
     with client:
         client.get('/')
@@ -49,3 +49,12 @@ def test_login(client, auth):
 def test_login_validate_input(auth, username, password, message):
     response = auth.login(username, password)
     assert message in response.data
+
+
+# 测试注销用户视图
+def test_logout(client, auth):
+    auth.login()
+    with client:
+        response = auth.logout()
+        assert response.headers['Location'] == 'http://localhost/'
+        assert 'user_id' not in session
