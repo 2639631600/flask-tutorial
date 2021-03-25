@@ -15,3 +15,12 @@ CREATE TABLE post (
     body TEXT NOT NULL,
     FOREIGN KEY (author_id) REFERENCES user (id)
 );
+
+create table like (
+    id integer primary key AUTOINCREMENT,
+    post_id integer not null,
+    created timestamp not null default CURRENT_TIMESTAMP,
+    like integer not null,
+    dislike integer not null,
+    foreign key (post_id) REFERENCES post(id)
+);

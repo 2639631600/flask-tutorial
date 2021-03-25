@@ -107,3 +107,17 @@ def details(id):
     # return "test"
     post = get_post(id, check_author=False)
     return render_template('blog/details.html',post=post)
+
+
+# 显示喜欢或不喜欢帖子
+@bp.route('/<int:id>/like')
+def likeindex(id):
+    # post = get_post(id, check_author=False)
+    posts = get_db()
+    posts.execute(
+        ('select like,dislike from like '
+         'join post on like.post_id=post.id '
+         'where post.id= ?'),
+        (id,)
+    ).fetchone()
+    return print('print:',posts)
