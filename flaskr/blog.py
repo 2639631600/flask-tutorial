@@ -99,3 +99,11 @@ def delete(id):
     db.execute('DELETE FROM post WHERE id = ?', (id,))
     db.commit()
     return redirect(url_for('blog.index'))
+
+
+# 显示帖子正文
+@bp.route('/<int:id>/details')
+def details(id):
+    # return "test"
+    post = get_post(id, check_author=False)
+    return render_template('blog/details.html',post=post)
