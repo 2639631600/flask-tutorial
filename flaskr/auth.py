@@ -19,13 +19,13 @@ def register():
         error = None
 
         if not username:
-            error = '用户名是必须的'
+            error = '用户名是必须的-Username isrequired.'
         elif not password:
-            error = '密码是必须的'
+            error = '密码是必须的-Password is required.'
         elif db.execute(
             'SELECT id FROM user WHERE username = ?', (username,)
         ).fetchone() is not None:
-            error = '用户 {} 已经注册'.format(username)
+            error = '用户 {} 已经注册-already registered'.format(username)
 
         if error is None:
             db.execute(
@@ -52,9 +52,9 @@ def login():
         ).fetchone()
 
         if user is None:
-            error = '用户名错误'
+            error = '用户名错误-Incorrect username.'
         elif not check_password_hash(user['password'], password):
-            error = '密码错误'
+            error = '密码错误-Incorrect password.'
 
         if error is None:
             session.clear()
