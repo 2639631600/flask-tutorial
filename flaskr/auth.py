@@ -25,7 +25,7 @@ def register():
         elif db.execute(
             'SELECT id FROM user WHERE username = ?', (username,)
         ).fetchone() is not None:
-            erroe = '用户 {} 已经注册'.format(username)
+            error = '用户 {} 已经注册'.format(username)
 
         if error is None:
             db.execute(
