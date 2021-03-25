@@ -19,13 +19,13 @@ def register():
         error = None
 
         if not username:
-            error = '用户名是必须的'
+            error = '用户名是必须的-Username isrequired.'
         elif not password:
-            error = '密码是必须的'
+            error = '密码是必须的-Password is required.'
         elif db.execute(
             'SELECT id FROM user WHERE username = ?', (username,)
         ).fetchone() is not None:
-            error = '用户 {} 已经注册'.format(username)
+            error = '用户 {} 已经注册-already registered'.format(username)
 
         if error is None:
             db.execute(
@@ -52,9 +52,9 @@ def login():
         ).fetchone()
 
         if user is None:
-            error = '用户名错误'
+            error = '用户名错误-Incorrect username.'
         elif not check_password_hash(user['password'], password):
-            error = '密码错误'
+            error = '密码错误-Incorrect password.'
 
         if error is None:
             session.clear()
@@ -87,7 +87,7 @@ def logout():
 
 
 # 在其他视图中验证用户是否已登录，这是一个装饰器
-# 函数名是wrapped_view，不使用functools.wraps，__name__就会是这个名字。
+# 函数名是wrapped_view，不使用functools.wraps装饰器，_name__就会是这个名字。
 def login_required(view):  # login_required 翻译意思是必须登录
     @functools.wraps(view)  # functools.warps 函数是为了在装饰器拷贝被装饰函数的__name__。
     def wrapped_view(**kwargs):

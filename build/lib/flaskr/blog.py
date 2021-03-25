@@ -1,4 +1,4 @@
-from flask import(
+from flask import (
     Blueprint, flash, g, redirect, render_template, request, url_for
 )
 from werkzeug.exceptions import abort
@@ -13,7 +13,8 @@ bp = Blueprint('blog', __name__)
 def index():
     db = get_db()
     posts = db.execute(
-        'SELECT p.id, title, body, created, author_id, username FROM post p JOIN user u ON p.author_id = u.id ORDER BY created DESC'
+        ('SELECT p.id, title, body, created, author_id, username FROM '
+         'post p JOIN user u ON p.author_id = u.id ORDER BY created DESC')
     ).fetchall()
     return render_template('blog/index.html', posts=posts)
 
@@ -47,12 +48,13 @@ def create():
 # 取得帖子函数
 def get_post(id, check_author=True):
     post = get_db().execute(
-        'SELECT p.id,title,body,created,author_id,username FROM post p JOIN user u ON p.author_id = u.id WHERE p.id = ?',
+        ('SELECT p.id,title,body,created,author_id,username FROM post p '
+         'JOIN user u ON p.author_id = u.id WHERE p.id = ?'),
         (id,)
     ).fetchone()
 
     if post is None:
-        abor(404, "Post id{0} doesn't exist.".format(id))
+        abort(404, "Post id{0} doesn't exist.".format(id))
 
     if check_author and post['author_id'] != g.user['id']:
         abort(403)
@@ -94,6 +96,78 @@ def update(id):
 def delete(id):
     get_post(id)
     db = get_db()
-    db.execute('DELETE FROM post WHERE id = ?',(id,))
+    db.execute('DELETE FROM post WHERE id = ?', (id,))
     db.commit()
     return redirect(url_for('blog.index'))
+
+
+# 显示帖子正文
+@bp.route('/<int:id>/details')
+def details(id):
+    # return "test"
+    post = get_post(id, check_author=False)
+    createlikes(id)
+    likes = get_likes(id)
+    return render_template('blog/details.html', post=post, likes=likes)
+
+
+# 获取like数据
+def get_likes(id):
+    datas = get_db().execute(
+        ('select like,dislike from likes '
+         'join post on likes.post_id=post.id '
+         'where post.id= ?'),
+        (id,)
+    ).fetchone()
+    return datas
+
+
+# 建立likes数据
+def createlikes(id):
+    id = id
+    db = get_db().execute(
+        ('SELECT l.id FROM likes l '
+         'JOIN post p ON l.post_id = p.id '
+         'WHERE p.id = ?'),
+        (id,)
+    ).fetchone()
+    if not db:
+        db = get_db()
+        db.execute(
+            'INSERT INTO likes (like,dislike,post_id) VALUES ( ?, ?, ?)',
+            (0, 0, id)
+        )
+        db.commit()
+    return id
+
+
+# 更新喜欢帖子数据
+@bp.route('/<int:id>/like', methods=('GET',))
+def updatelike(id):
+    post = get_post(id, check_author=False)
+    likes = get_likes(id)
+    like = likes['like']
+    like += 1
+    db = get_db()
+    db.execute(
+        'UPDATE likes SET like = ? WHERE post_id = ?',
+        (like, id)
+    )
+    db.commit()
+    return render_template('blog/details.html', post=post, likes=get_likes(id))
+
+
+# 更新不喜欢帖子数据
+@bp.route('/<int:id>/dislike', methods=('GET',))
+def updatedislike(id):
+    post = get_post(id, check_author=False)
+    likes = get_likes(id)
+    dislike = likes['dislike']
+    dislike += 1
+    db = get_db()
+    db.execute(
+        'UPDATE likes SET dislike = ? WHERE post_id = ?',
+        (dislike, id)
+    )
+    db.commit()
+    return render_template('blog/details.html', post=post, likes=get_likes(id))
