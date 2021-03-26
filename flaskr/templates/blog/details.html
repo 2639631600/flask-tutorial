@@ -1,6 +1,9 @@
 {% extends 'base.html' %}
 
 {% block header %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
+<link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/4.7.0/css/font-awesome.css">
+<script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
     <h1>{% block title %}
         Blog Details
     {% endblock title %}</h1>
@@ -26,5 +29,18 @@
     </div>
     <div>
         <a cllas="action" href="{{  url_for('blog.updatedislike', id=post['id']) }}">Disike</a> {{ likes['dislike'] }} people dislike this
+    </div>
+
+    <div class="form-group">
+        
+        <textarea name="content" cols="30" rows="10"></textarea>
+        <script>
+            var simplemde = new SimpleMDE({
+                element: document.getElementById("fieldTest"),
+                autoDownloadFontAwesome: false,
+                status: false
+            });
+        </script>
+        
     </div>
 {% endblock content %}
