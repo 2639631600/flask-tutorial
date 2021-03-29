@@ -1,14 +1,13 @@
 {% extends 'base.html' %}
 
 {% block header %}
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
-<link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/4.7.0/css/font-awesome.css">
-<script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
+
     <h1>{% block title %}
         Blog Details
     {% endblock title %}</h1>
     <a class="action" href="{{ url_for('blog.index') }}">Back</a>
-{% endblock header %}
+    
+    {% endblock header %}
 
 {% block content %}
     <article>
@@ -23,7 +22,6 @@
         </header>
         <p class="body">{{ post['body'] }}</p>
     </article>
-    <br />
     <div>
         <a cllas="action" href="{{  url_for('blog.updatelike', id=post['id']) }}">Like</a> {{ likes['like'] }} people like this
     </div>
@@ -31,9 +29,21 @@
         <a cllas="action" href="{{  url_for('blog.updatedislike', id=post['id']) }}">Disike</a> {{ likes['dislike'] }} people dislike this
     </div>
 
+    <hr>
+
+    <h1>撰写评论</h1>
+    <form method="post">
+        {{ ckeditor.create() }}
+        <input type="submit">
+    </form>
+    {{ ckeditor.load() }}
+    {{ ckeditor.config() }}  <!-- 这时不用设置name参数 -->
+    {# simplemde MAKEDOWN编辑器 
     <div class="form-group">
-        
-        <textarea name="content" cols="30" rows="10"></textarea>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
+        <link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/4.7.0/css/font-awesome.css">
+        <script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
+        <textarea name="content" cols="30" rows="10" id="fieldTest"></textarea>
         <script>
             var simplemde = new SimpleMDE({
                 element: document.getElementById("fieldTest"),
@@ -41,6 +51,6 @@
                 status: false
             });
         </script>
-        
+    #}
     </div>
 {% endblock content %}

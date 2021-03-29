@@ -1,5 +1,8 @@
 import os
 from flask import Flask
+from flask_ckeditor import CKEditor
+
+ckeditor = CKEditor()
 
 
 def create_app(test_config=None):
@@ -8,6 +11,8 @@ def create_app(test_config=None):
     app.config.from_mapping(
         SECRET_KEY='dev',
         DATABASE=os.path.join(app.instance_path, 'flaskr.sqlite'),
+        CKEDITOR_SERVE_LOCAL=False,
+        CKEDITOR_HEIGHT=400,
     )
 
     if test_config is None:
@@ -39,5 +44,8 @@ def create_app(test_config=None):
     from . import blog
     app.register_blueprint(blog.bp)
     app.add_url_rule('/', endpoint='index')
+
+    # 注册CKEditor
+    ckeditor.init_app(app)
 
     return app
