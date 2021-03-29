@@ -38,19 +38,5 @@
     </form>
     {{ ckeditor.load() }}
     {{ ckeditor.config() }}  <!-- 这时不用设置name参数 -->
-    {# simplemde MAKEDOWN编辑器 
-    <div class="form-group">
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
-        <link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/4.7.0/css/font-awesome.css">
-        <script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
-        <textarea name="content" cols="30" rows="10" id="fieldTest"></textarea>
-        <script>
-            var simplemde = new SimpleMDE({
-                element: document.getElementById("fieldTest"),
-                autoDownloadFontAwesome: false,
-                status: false
-            });
-        </script>
-    #}
-    </div>
+
 {% endblock content %}
