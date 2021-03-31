@@ -34,6 +34,6 @@ CREATE TABLE comments (
     created TIMESTAMP not null DEFAULT CURRENT_TIMESTAMP,
     user TEXT UNIQUE NOT NULL,
     email TEXT UNIQUE NOT NULL,
-    comments TEXT UPDATE NOT NULL,
+    comments TEXT UNIQUE NOT NULL,
     FOREIGN KEY (post_id) REFERENCES post(id)
 );

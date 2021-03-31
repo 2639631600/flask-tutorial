@@ -1,6 +1,9 @@
+<!DOCTYPE html>
+<title>{% block title %}评论{% endblock %} - Flaskr</title>
+<link rel="stylesheet" href="{{ url_for('static',filename='style.css') }}">
 <div id="comments" class="comments-area">
     <h2 class="comments-title">
-        《<span>在 Stack Overflow 上拿到了 Flask 银徽章</span>》上有2条评论 </h2>
+        《<span>{{ post.title }}</span>》上有{{ numcomment.num or 0 }}条评论 </h2>
     <ol class="commentlist">
         <li class="comment even thread-even depth-1" id="li-comment-7566">
             <article id="comment-7566" class="comment">

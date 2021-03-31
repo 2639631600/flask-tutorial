@@ -104,9 +104,8 @@ def delete(id):
 # 显示帖子正文
 @bp.route('/<int:id>/details')
 def details(id):
-    # return "test"
     post = get_post(id, check_author=False)
-    createlikes(id)
+    createlikes(id)  # 显示正文时初始化likes数据
     likes = get_likes(id)
     return render_template('blog/details.html', post=post, likes=likes)
 
@@ -171,3 +170,19 @@ def updatedislike(id):
     )
     db.commit()
     return render_template('blog/details.html', post=post, likes=get_likes(id))
+
+
+# 显示要评论的帖子标题和现有评论数
+@bp.route('/<int:id>/comments')
+def get_comments(id):
+    post = get_post(id, check_author=False)
+    numcomment = get_db().execute(
+        ('select sum(comments.id) as num from comments '
+         'join post on comments.post_id=post.id '
+         'where post.id= ?'),
+        (id,)
+    ).fetchone()
+    return render_template(
+        'blog/comments.html',
+        post=post,
+        numcomment=numcomment)
