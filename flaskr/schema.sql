@@ -20,10 +20,10 @@ CREATE TABLE post (
 
 CREATE TABLE likes (
     id INTEGER primary key AUTOINCREMENT,
-    post_id INTEGER not null,
-    created TIMESTAMP not null default CURRENT_TIMESTAMP,
-    like INTEGER not null default 0,
-    dislike INTEGER not null default 0,
+    post_id INTEGER NOT NULL,
+    created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    like INTEGER NOT NULL DEFAULT 0,
+    dislike INTEGER NOT NULL DEFAULT 0,
     foreign key (post_id) REFERENCES post(id)
 );
 
@@ -31,7 +31,7 @@ CREATE TABLE comments (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     post_id INTEGER NOT NULL,
     parent_id INTEGER NOT NULL,
-    created TIMESTAMP not null default CURRENT_TIMESTAMP,
+    created TIMESTAMP not null DEFAULT CURRENT_TIMESTAMP,
     user TEXT UNIQUE NOT NULL,
     email TEXT UNIQUE NOT NULL,
     comments TEXT UPDATE NOT NULL,
