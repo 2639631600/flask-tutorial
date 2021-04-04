@@ -176,30 +176,36 @@ def updatedislike(id):
 @bp.route('/<int:id>/comments')
 def get_comments(id):
     post = get_post(id, check_author=False)
-    numcomment = get_db().execute(
+    db = get_db()
+    numcomment = db.execute(
         ('select sum(comments.id) as num from comments '
          'join post on comments.post_id=post.id '
          'where post.id= ?'),
-        (id,)
-    ).fetchone()
-    if not numcomment:
+        (id,)  # 因使用SQL语句sum(comments.id)函数，数据行存在
+    ).fetchone()  # 返回的数据是flask行工厂
+
+    if numcomment['num'] is None:
+        pass
+    else:
         comments = get_db().execute(
-        ('select c.id, c.post_id, c.parent_id, c.created, c.user, c.email, c.comments from comments c '
-         'join post p on c.post_id=p.id '
-         'where post.id= ?'),
-        (id,)
-    ).fetchone()
+            ('select c.id, c.post_id, c.parent_id, c.created, c.user, '
+             'c.email, c.comments from comments c '
+             'join post p on c.post_id=p.id '
+             'where p.id= ?'),
+            (id,)
+        ).fetchone()
         return render_template(
-        'blog/comments.html',
-        post=post,
-        numcomment=numcomment
+            'blog/comments.html',
+            post=post,
+            numcomment=numcomment,
+            comments=comments
         )
     return render_template(
         'blog/comments.html',
         post=post,
         numcomment=numcomment,
-        comments=comments
-        )
+        # comments=comments
+    )
 
 
 # 添加评论
@@ -208,7 +214,7 @@ def add_comment(id, parent_id=0):
     # post = get_post(id)
 
     if request.method == 'POST':
-        parent_id = parent_id
+        # parent_id = parent_id
         user = request.form['user']
         comment = request.form['comment']
         error = None
@@ -220,8 +226,13 @@ def add_comment(id, parent_id=0):
         else:
             db = get_db()
             db.execute(
-                ('UPDATE comments SET post_id = ?, parent_id = ? user = ? comments = ? WHERE id = ?'
-                ),(id,parent_id,user,comment)
-                )
+                ('UPDATE comments SET '
+                 'post_id = ?, '
+                 'parent_id = ? '
+                 'user = ? '
+                 'comments = ? '
+                 'WHERE id = ?'
+                 ), (id, parent_id, user, comment)
+            )
             db.commit()
     return redirect(url_for('blog.details.html'))

@@ -131,7 +131,7 @@ def createlikes(id):
          'WHERE p.id = ?'),
         (id,)
     ).fetchone()
-    if not db:
+    if db['l.id'] is not None:
         db = get_db()
         db.execute(
             'INSERT INTO likes (like,dislike,post_id) VALUES ( ?, ?, ?)',
