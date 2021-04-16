@@ -1,0 +1,23 @@
+{% macro form_field(field) %}
+    {{ field.label }}<br>
+    {{ field(**kwargs) }}<br>
+    {% if field.errors -%}
+        {% for error in field.errors -%}
+            <small class="error">{{ error }}</small><br>
+        {%- endfor %}
+    {%- endif %}
+{% endmacro %}
+
+{% macro form_field_flash(field) %}
+    {% if field.errors -%}
+        {% for error in field.errors -%}
+            <div class="error">{{ error }}</div>
+        {%- endfor %}
+    {%- endif %}
+    {% for message in get_flashed_messages() %} 
+    <div class="flash">{{ message }}</div>
+    {% endfor %}
+    {{ field.label }}<br>
+    {{ field(**kwargs) }}<br>
+   
+{% endmacro %}
